@@ -1,0 +1,1874 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+<meta name="author" content="Facundo Rivas y Braian Biale" />
+
+
+<title>Análisis de datos para predictor académico UA</title>
+
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.6/css/bootstrap.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.6/js/bootstrap.min.js"></script>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<script src="site_libs/navigation-1.1/codefolding.js"></script>
+<link href="site_libs/magnific-popup-1.1.0/magnific-popup.css" rel="stylesheet" />
+<script src="site_libs/magnific-popup-1.1.0/jquery.magnific-popup.min.js"></script>
+<link href="site_libs/readthedown-0.1/readthedown.css" rel="stylesheet" />
+<script src="site_libs/readthedown-0.1/readthedown.js"></script>
+
+
+
+
+</head>
+
+<body>
+
+
+<div id="content" data-toggle="wy-nav-shift">
+
+<!-- tabsets -->
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+</script>
+
+<!-- code folding -->
+
+<nav id="nav-top" role="navigation" aria-label="top navigation">
+    <a role="button" href="#" data-toggle="wy-nav-top"><span class="glyphicon glyphicon-menu-hamburger"></span></a>
+</nav>
+
+
+<div id="header">
+<h1 class="title">Análisis de datos para predictor académico UA</h1>
+</div>
+
+
+<div id="table-of-contents">
+    <h2><a href="#content">Análisis de datos para predictor académico UA</a></h2>
+    <div id="text-table-of-contents">
+      <ul>
+      <li><a href="#introduccion">Introducción</a></li>
+      <li><a href="#analisis">Análisis</a></li>
+      <li><a href="#interpretacion">Interpretación</a></li>
+      <li><a href="#predictor">Predictor</a></li>
+      </ul>
+    </div>
+</div>
+
+<div id="main">
+<div id="introduccion" class="section level1">
+<h1>Introducción</h1>
+<div id="obtencion-de-los-datos" class="section level3">
+<h3>Obtención de los datos</h3>
+<p>Para la realización de este reporte fueron proporcionados tres archivos <em>.xlsx</em>, los cuales contienen ingresantes de los años 2018 y 2019 de la facultad de ingeniería de la Universidad Austral. Estos datos pasaron primeramente por una etapa de <em>“Data Curation”</em> o <em>“Curación de Datos”</em>, para mejorar su calidad. A continuación se muestra una preview de como quedaron ordenados los datos con sus respectivas variables:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center;">
+Name
+</th>
+<th style="text-align:center;">
+Gender
+</th>
+<th style="text-align:center;">
+Career
+</th>
+<th style="text-align:center;">
+Cohort
+</th>
+<th style="text-align:center;">
+Entry
+</th>
+<th style="text-align:center;">
+Math
+</th>
+<th style="text-align:center;">
+R.Math
+</th>
+<th style="text-align:center;">
+Physics
+</th>
+<th style="text-align:center;">
+R.Physics
+</th>
+<th style="text-align:center;">
+Entry Average
+</th>
+<th style="text-align:center;">
+HS Average
+</th>
+<th style="text-align:center;">
+School
+</th>
+<th style="text-align:center;">
+Year
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center;">
+Nuber Morales Ramos
+</td>
+<td style="text-align:center;">
+M
+</td>
+<td style="text-align:center;">
+IND
+</td>
+<td style="text-align:center;">
+2018
+</td>
+<td style="text-align:center;">
+Ingreso Febrero
+</td>
+<td style="text-align:center;">
+10
+</td>
+<td style="text-align:center;">
+NA
+</td>
+<td style="text-align:center;">
+9
+</td>
+<td style="text-align:center;">
+NA
+</td>
+<td style="text-align:center;">
+10
+</td>
+<td style="text-align:center;">
+NA
+</td>
+<td style="text-align:center;">
+Santo Tomas (La Pampa)
+</td>
+<td style="text-align:center;">
+2018
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+Stefan Rodriguez Juan
+</td>
+<td style="text-align:center;">
+M
+</td>
+<td style="text-align:center;">
+IND
+</td>
+<td style="text-align:center;">
+2018
+</td>
+<td style="text-align:center;">
+Ingreso Febrero
+</td>
+<td style="text-align:center;">
+9
+</td>
+<td style="text-align:center;">
+NA
+</td>
+<td style="text-align:center;">
+9
+</td>
+<td style="text-align:center;">
+NA
+</td>
+<td style="text-align:center;">
+9
+</td>
+<td style="text-align:center;">
+NA
+</td>
+<td style="text-align:center;">
+ETU Werner von Siemens
+</td>
+<td style="text-align:center;">
+2018
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+Banus Antonijevic Malti
+</td>
+<td style="text-align:center;">
+M
+</td>
+<td style="text-align:center;">
+IND
+</td>
+<td style="text-align:center;">
+2018
+</td>
+<td style="text-align:center;">
+Ingreso Directo
+</td>
+<td style="text-align:center;">
+2
+</td>
+<td style="text-align:center;">
+NA
+</td>
+<td style="text-align:center;">
+9
+</td>
+<td style="text-align:center;">
+NA
+</td>
+<td style="text-align:center;">
+6
+</td>
+<td style="text-align:center;">
+NA
+</td>
+<td style="text-align:center;">
+Cardenal Newman
+</td>
+<td style="text-align:center;">
+2018
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+Maria Pedro Capatti
+</td>
+<td style="text-align:center;">
+M
+</td>
+<td style="text-align:center;">
+IND
+</td>
+<td style="text-align:center;">
+2018
+</td>
+<td style="text-align:center;">
+Ingreso Directo
+</td>
+<td style="text-align:center;">
+NA
+</td>
+<td style="text-align:center;">
+NA
+</td>
+<td style="text-align:center;">
+NA
+</td>
+<td style="text-align:center;">
+NA
+</td>
+<td style="text-align:center;">
+NaN
+</td>
+<td style="text-align:center;">
+NA
+</td>
+<td style="text-align:center;">
+Nuestra Señora de Lujan
+</td>
+<td style="text-align:center;">
+2018
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+Thomas Gonzalo Mucci
+</td>
+<td style="text-align:center;">
+M
+</td>
+<td style="text-align:center;">
+INF
+</td>
+<td style="text-align:center;">
+2018
+</td>
+<td style="text-align:center;">
+Ingreso Septiembre
+</td>
+<td style="text-align:center;">
+3
+</td>
+<td style="text-align:center;">
+7
+</td>
+<td style="text-align:center;">
+10
+</td>
+<td style="text-align:center;">
+NA
+</td>
+<td style="text-align:center;">
+7
+</td>
+<td style="text-align:center;">
+NA
+</td>
+<td style="text-align:center;">
+Instituto Luigi Pirandello
+</td>
+<td style="text-align:center;">
+2018
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+Franco Micaela Joaquin
+</td>
+<td style="text-align:center;">
+M
+</td>
+<td style="text-align:center;">
+IND
+</td>
+<td style="text-align:center;">
+2018
+</td>
+<td style="text-align:center;">
+Ingreso Libre
+</td>
+<td style="text-align:center;">
+4
+</td>
+<td style="text-align:center;">
+NA
+</td>
+<td style="text-align:center;">
+10
+</td>
+<td style="text-align:center;">
+NA
+</td>
+<td style="text-align:center;">
+7
+</td>
+<td style="text-align:center;">
+NA
+</td>
+<td style="text-align:center;">
+Cardenal Newman
+</td>
+<td style="text-align:center;">
+2018
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+Ramos Nicole Baiona
+</td>
+<td style="text-align:center;">
+M
+</td>
+<td style="text-align:center;">
+IND
+</td>
+<td style="text-align:center;">
+2018
+</td>
+<td style="text-align:center;">
+Ingreso Febrero
+</td>
+<td style="text-align:center;">
+9
+</td>
+<td style="text-align:center;">
+NA
+</td>
+<td style="text-align:center;">
+9
+</td>
+<td style="text-align:center;">
+NA
+</td>
+<td style="text-align:center;">
+9
+</td>
+<td style="text-align:center;">
+NA
+</td>
+<td style="text-align:center;">
+Los Robles
+</td>
+<td style="text-align:center;">
+2018
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+Argüello Berton Federico
+</td>
+<td style="text-align:center;">
+F
+</td>
+<td style="text-align:center;">
+IND
+</td>
+<td style="text-align:center;">
+2018
+</td>
+<td style="text-align:center;">
+Ingreso Septiembre
+</td>
+<td style="text-align:center;">
+7
+</td>
+<td style="text-align:center;">
+NA
+</td>
+<td style="text-align:center;">
+10
+</td>
+<td style="text-align:center;">
+NA
+</td>
+<td style="text-align:center;">
+8
+</td>
+<td style="text-align:center;">
+NA
+</td>
+<td style="text-align:center;">
+Dante Alighieri
+</td>
+<td style="text-align:center;">
+2018
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+Bautista Solis Aranzasti
+</td>
+<td style="text-align:center;">
+M
+</td>
+<td style="text-align:center;">
+IND
+</td>
+<td style="text-align:center;">
+2018
+</td>
+<td style="text-align:center;">
+Ingreso Directo
+</td>
+<td style="text-align:center;">
+7
+</td>
+<td style="text-align:center;">
+NA
+</td>
+<td style="text-align:center;">
+9
+</td>
+<td style="text-align:center;">
+NA
+</td>
+<td style="text-align:center;">
+8
+</td>
+<td style="text-align:center;">
+NA
+</td>
+<td style="text-align:center;">
+Cardenal Newman
+</td>
+<td style="text-align:center;">
+2018
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+Palmero Aneiva Scandella
+</td>
+<td style="text-align:center;">
+M
+</td>
+<td style="text-align:center;">
+INF
+</td>
+<td style="text-align:center;">
+2018
+</td>
+<td style="text-align:center;">
+Ingreso Febrero
+</td>
+<td style="text-align:center;">
+2
+</td>
+<td style="text-align:center;">
+7
+</td>
+<td style="text-align:center;">
+5
+</td>
+<td style="text-align:center;">
+NA
+</td>
+<td style="text-align:center;">
+5
+</td>
+<td style="text-align:center;">
+NA
+</td>
+<td style="text-align:center;">
+Instituto Gabriel D’Annunzio
+</td>
+<td style="text-align:center;">
+2018
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+Cruz Ruben Salinas
+</td>
+<td style="text-align:center;">
+M
+</td>
+<td style="text-align:center;">
+IND
+</td>
+<td style="text-align:center;">
+2018
+</td>
+<td style="text-align:center;">
+Ingreso Directo
+</td>
+<td style="text-align:center;">
+NA
+</td>
+<td style="text-align:center;">
+NA
+</td>
+<td style="text-align:center;">
+NA
+</td>
+<td style="text-align:center;">
+NA
+</td>
+<td style="text-align:center;">
+NaN
+</td>
+<td style="text-align:center;">
+NA
+</td>
+<td style="text-align:center;">
+Moorlands
+</td>
+<td style="text-align:center;">
+2018
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="analisis" class="section level1">
+<h1>Análisis</h1>
+<div id="calidad-de-los-datos" class="section level3">
+<h3>Calidad de los datos</h3>
+<p>Como se puede ver hay 13 variables que caracterizan a cada uno de los elementos pertenecientes al conjunto de datos. Luego del proceso de <em>“Data Curation”</em>, hay muchas observaciones de las variables que no estan completas. Esto se debe a que, o bien fueron añadidas dichas variables al conjunto original de datos, o bien a que los datos fueron proporcionados ya de esta manera, lo cual afecta a la calidad que tiene la variable. En la siguiente tabla se muestran las variables con sus respectivas calidades (Cantidad de <em>NA</em> en cada variable, sobre el total de elementos que conforman el conjunto de datos):</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left;">
+</th>
+<th style="text-align:right;">
+Porcentaje
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+Name
+</td>
+<td style="text-align:right;">
+100
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Gender
+</td>
+<td style="text-align:right;">
+100
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Career
+</td>
+<td style="text-align:right;">
+100
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Cohort
+</td>
+<td style="text-align:right;">
+100
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Entry
+</td>
+<td style="text-align:right;">
+100
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Math
+</td>
+<td style="text-align:right;">
+83
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+R.Math
+</td>
+<td style="text-align:right;">
+19
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Physics
+</td>
+<td style="text-align:right;">
+83
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+R.Physics
+</td>
+<td style="text-align:right;">
+11
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Entry Average
+</td>
+<td style="text-align:right;">
+85
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+HS Average
+</td>
+<td style="text-align:right;">
+24
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+School
+</td>
+<td style="text-align:right;">
+100
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Year
+</td>
+<td style="text-align:right;">
+100
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="analisis-variable-a-variable" class="section level3">
+<h3>Análisis variable a variable</h3>
+<p>Una vez curados los datos, se hace un análisis “variable a variable” para extraer información de las mismas.</p>
+<div id="genero-de-los-ingresantes" class="section level4 tabset">
+<h4>Género de los ingresantes</h4>
+<div id="section" class="section level5">
+<h5><strong>2018</strong></h5>
+<p><img src="index_files/figure-html/graficoDeTorta1-1.png" width="768" /></p>
+<p>En 2018, ingresaron 94 varones y 23 mujeres.</p>
+</div>
+<div id="section-1" class="section level5">
+<h5><strong>2019</strong></h5>
+<p><img src="index_files/figure-html/graficoDeTorta2-1.png" width="768" /></p>
+<p>En 2019, ingresaron 117 varones y 41 mujeres.</p>
+</div>
+</div>
+<div id="section-2" class="section level4 unnumbered">
+<h4></h4>
+<p>Como puede notarse en los gráficos que el porcentaje de mujeres con respecto al de varones es mayor en el año 2019 que en el 2018, debido a que incrementó la cantidad de mujeres que ingresaron a casi el doble, y el incremento de los varones no es significativo con respecto al de las mujeres.</p>
+</div>
+<div id="tipos-de-ingreso" class="section level4">
+<h4>Tipos de ingreso</h4>
+<p><img src="index_files/figure-html/graficoBarra1-1.png" width="768" /></p>
+<p>El eje horizontal del gráfico representa la cantidad de ingresantes y el eje vertical contiene los distintos tipos de ingresos. Se puede ver que una gran mayoría de las personas eligen el curso de ingreso de febrero para entrar a la universidad.</p>
+</div>
+<div id="colegios-de-procedencia" class="section level4">
+<h4>Colegios de procedencia</h4>
+<p><img src="index_files/figure-html/graficoDeBarra2-1.png" width="768" /></p>
+<p>El eje vertical del gráfico representa la cantidad de ingresantes que proporciona cada colegio y el eje horizontal contiene los nombres de los colegios. “Los Molinos”, el colegio que más aportó ingresantes es de la misma zona que la Universidad Austral.</p>
+</div>
+<div id="notas-del-examen-de-matematica" class="section level4 tabset">
+<h4>Notas del examen de Matemática</h4>
+<p>Se analizan el promedio de todas las notas y el porcentaje de ingresantes que aprobaron el examen en primer instancia, en los años 2018 y 2019.</p>
+<div id="section-3" class="section level5">
+<h5><strong>2018</strong></h5>
+<table>
+<thead>
+<tr>
+<th style="text-align:center;">
+Promedio
+</th>
+<th style="text-align:center;">
+Aprobados
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center;">
+6
+</td>
+<td style="text-align:center;">
+59 %
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="section-4" class="section level5">
+<h5><strong>2019</strong></h5>
+<table>
+<thead>
+<tr>
+<th style="text-align:center;">
+Promedio
+</th>
+<th style="text-align:center;">
+Aprobados
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center;">
+6
+</td>
+<td style="text-align:center;">
+57 %
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="section-5" class="section level4 unnumbered">
+<h4></h4>
+<p>El promedio de nota de los exámenes se mantuvo igual y el porcentaje de aprobados en primer instancia tuvo una varianza despreciable. Esto puede darnos lugar a hacer una supocisión diciendo que mientras que la nota promedio de matemática sea 6, el porcentaje de aprobados rondará en un 60%.</p>
+</div>
+<div id="notas-del-examen-de-fisica" class="section level4 tabset">
+<h4>Notas del examen de Física</h4>
+<p>Se analizan el promedio de todas las notas y el porcentaje de ingresantes que aprobaron el examen en primer instancia, en los años 2018 y 2019.</p>
+<div id="section-6" class="section level5">
+<h5><strong>2018:</strong></h5>
+<table>
+<thead>
+<tr>
+<th style="text-align:center;">
+Promedio
+</th>
+<th style="text-align:center;">
+Aprobados
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center;">
+8
+</td>
+<td style="text-align:center;">
+92 %
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="section-7" class="section level5">
+<h5><strong>2019:</strong></h5>
+<table>
+<thead>
+<tr>
+<th style="text-align:center;">
+Promedio
+</th>
+<th style="text-align:center;">
+Aprobados
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center;">
+7
+</td>
+<td style="text-align:center;">
+74 %
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="section-8" class="section level4 unnumbered">
+<h4></h4>
+<p>El promedio de nota de los exámenes bajó y al igual que el porcentaje de aprobados pudiendo suponer que el examen de física de 2019 tuvo una dificultad mayor, o bien, los alumnos se prepararon menos.</p>
+<p><strong>Se puede notar que en ambas materias el porcentaje de aprobados del año 2019 es menor que el de 2018</strong></p>
+</div>
+<div id="promedio-de-ingreso" class="section level4">
+<h4>Promedio de ingreso</h4>
+<p>Se analizan los datos de promedio de ingreso observando el porcentaje de ingresantes que obtuvo una puntuación mayor a 7.</p>
+<p><img src="index_files/figure-html/graficoDensidad-1.png" width="768" /></p>
+<ul>
+<li><p>Ingresantes 2018: 117</p></li>
+<li><p>Ingresantes 2019: 158</p></li>
+</ul>
+<p><strong>Observese que la densidad de ingresantes que obtuvieron un promedio mayor a 7 en 2019 es mayor que en 2018.</strong></p>
+</div>
+<div id="promedio-de-secundaria" class="section level4">
+<h4>Promedio de secundaria</h4>
+<p>Análisis de los datos de promedio de secundaria y obtención un top 5.</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center;">
+Name
+</th>
+<th style="text-align:center;">
+School
+</th>
+<th style="text-align:center;">
+HS Average
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center;">
+Onetto Leonardo Queralt
+</td>
+<td style="text-align:center;">
+Confluencia (Neuquén)
+</td>
+<td style="text-align:center;">
+9.45
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+Balerdi Gareis Eresari
+</td>
+<td style="text-align:center;">
+San Jose
+</td>
+<td style="text-align:center;">
+9.41
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+Matías Balerdi Staszewski
+</td>
+<td style="text-align:center;">
+Northlands
+</td>
+<td style="text-align:center;">
+9.34
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+Julian Ignacio Torralva
+</td>
+<td style="text-align:center;">
+Antonio Toro
+</td>
+<td style="text-align:center;">
+9.20
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+Iglesias Eugenia Martin
+</td>
+<td style="text-align:center;">
+St. Matthew´s North
+</td>
+<td style="text-align:center;">
+9.17
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="recuperatorios" class="section level4 tabset">
+<h4>Recuperatorios</h4>
+<p>Teniendo los conjuntos de los ingresantes totales de 2018 y 2019, se observa el comportamiento del porcentaje de alumnos que tuvieron que rendir algún tipo de recuperatorio.</p>
+<div id="section-9" class="section level5">
+<h5><strong>2018</strong></h5>
+<p><img src="index_files/figure-html/unnamed-chunk-9-1.png" width="768" /></p>
+</div>
+<div id="section-10" class="section level5">
+<h5><strong>2019</strong></h5>
+<p><img src="index_files/figure-html/unnamed-chunk-10-1.png" width="768" /></p>
+</div>
+</div>
+<div id="section-11" class="section level4 unnumbered">
+<h4></h4>
+<p><strong>Los porcentajes para ambos años son muy similares.</strong></p>
+</div>
+</div>
+</div>
+<div id="interpretacion" class="section level1">
+<h1>Interpretación</h1>
+<p>Luego de analizar los datos variable a variable, se hace una interpretación de dichos análisis cruzando datos con el fin de obtener más información de las conclusiones a las que se llega.</p>
+<div id="media-de-los-promedios-de-ingreso-segun-genero" class="section level4">
+<h4>Media de los promedios de ingreso segun género</h4>
+<p><strong>2018:</strong></p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left;">
+Gender
+</th>
+<th style="text-align:right;">
+Mean
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+Varones
+</td>
+<td style="text-align:right;">
+6.96
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Mujeres
+</td>
+<td style="text-align:right;">
+7.33
+</td>
+</tr>
+</tbody>
+</table>
+<p>Las mujeres obtuvieron un promedio de ingreso 0.40 puntos mayor al de los varones.</p>
+<p><strong>2019:</strong></p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left;">
+Gender
+</th>
+<th style="text-align:right;">
+Mean
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+Varones
+</td>
+<td style="text-align:right;">
+6.41
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Mujeres
+</td>
+<td style="text-align:right;">
+6.60
+</td>
+</tr>
+</tbody>
+</table>
+<p>Las mujeres obtuvieron un promedio de ingreso 0.09 puntos mayor al de los varones. La diferencia de promedios de ingreso entre varones y mujeres fue mas baja en el último año.</p>
+</div>
+<div id="comportamiento-en-las-materias-segun-genero" class="section level4">
+<h4>Comportamiento en las materias según género</h4>
+<div id="notas-de-matematica" class="section level5 tabset">
+<h5>Notas de matemática</h5>
+<div id="section-12" class="section level6">
+<h6><strong>2018</strong></h6>
+<p><img src="index_files/figure-html/unnamed-chunk-13-1.png" width="768" /></p>
+</div>
+<div id="section-13" class="section level6">
+<h6><strong>2019</strong></h6>
+<p><img src="index_files/figure-html/unnamed-chunk-14-1.png" width="768" /></p>
+</div>
+</div>
+<div id="section-14" class="section level5 unnumbered">
+<h5></h5>
+<p>Las mujeres tuvieron un desempeño muy similar para ambos años, en cambio, se puede notar que los hombres tuvieron una mejora en su desempeño en el año 2019 (los picos de densidad se dan en notas un poco más altas).</p>
+</div>
+<div id="notas-fisica" class="section level5 tabset">
+<h5>Notas física</h5>
+<div id="section-15" class="section level6">
+<h6><strong>2018</strong></h6>
+<p><img src="index_files/figure-html/unnamed-chunk-15-1.png" width="768" /></p>
+</div>
+<div id="section-16" class="section level6">
+<h6><strong>2019</strong></h6>
+<p><img src="index_files/figure-html/unnamed-chunk-16-1.png" width="768" /></p>
+</div>
+</div>
+<div id="section-17" class="section level5 unnumbered">
+<h5></h5>
+<p>En 2019 el desempeño general fue mas bajo, pero es notable que en ambos años las mujeres tuvieron un mejor desempeño que los varones.</p>
+<p>De estos 4 gráficos anteriores se puede notar claramente que el desempeño en física para ambos años y sexos es considerablemente mejor que el de matemática.</p>
+</div>
+</div>
+<div id="carrera-elegida-segun-genero" class="section level4 tabset">
+<h4>Carrera elegida según género</h4>
+<div id="varones" class="section level5">
+<h5><strong>Varones</strong></h5>
+<p><img src="index_files/figure-html/unnamed-chunk-17-1.png" width="768" /></p>
+</div>
+<div id="mujeres" class="section level5">
+<h5><strong>Mujeres</strong></h5>
+<p><img src="index_files/figure-html/unnamed-chunk-18-1.png" width="768" /></p>
+</div>
+</div>
+<div id="comportamiento-en-las-materias-segun-carrera-elegida" class="section level4">
+<h4>Comportamiento en las materias según carrera elegida</h4>
+<div id="notas-matematica" class="section level5 tabset">
+<h5>Notas matemática</h5>
+<div id="section-18" class="section level6">
+<h6><strong>2018</strong></h6>
+<p><img src="index_files/figure-html/unnamed-chunk-19-1.png" width="768" /></p>
+</div>
+<div id="section-19" class="section level6">
+<h6><strong>2019</strong></h6>
+<p><img src="index_files/figure-html/unnamed-chunk-20-1.png" width="768" /></p>
+</div>
+</div>
+<div id="section-20" class="section level5 unnumbered">
+<h5></h5>
+<ul>
+<li><p><strong>2018:</strong> Ingresantes de ingeniería industrial tienen mejor desempeño que lo ingresantes de ingeniería informática.</p></li>
+<li><p><strong>2019:</strong> Ingresantes de ingeniería industrial e informática tienen un desempeño similar, mientras que los de ingeniería biomédica, tienen un desempeño mas bajo (mayor densidad en notas bajas).</p></li>
+</ul>
+</div>
+<div id="notas-fisica-1" class="section level5 tabset">
+<h5>Notas física</h5>
+<div id="section-21" class="section level6">
+<h6><strong>2018</strong></h6>
+<p><img src="index_files/figure-html/unnamed-chunk-21-1.png" width="768" /></p>
+</div>
+<div id="section-22" class="section level6">
+<h6><strong>2019</strong></h6>
+<p><img src="index_files/figure-html/unnamed-chunk-22-1.png" width="768" /></p>
+</div>
+</div>
+<div id="section-23" class="section level5 unnumbered">
+<h5></h5>
+<ul>
+<li><p><strong>2018:</strong> Ingresantes de ingeniería industrial tienen mejor desempeño que lo ingresantes de ingeniería informática.</p></li>
+<li><p><strong>2019:</strong> Ingresantes de ingeniería biomédica e informática tienen un desempeño similar, mientras que los de ingeniería industrial, tienen un desempeño mas alto (mayor densidad en notas altas).</p></li>
+</ul>
+</div>
+</div>
+</div>
+<div id="predictor" class="section level1">
+<h1>Predictor</h1>
+<p>En este informe se explica el desarrollo de la generación de modelos de predicción para predecir si un alumno desertará de la carrera con datos de fin del primer cuatrimestre de cursada.</p>
+<div id="set-de-datos" class="section level3">
+<h3>Set de datos</h3>
+<p>Para el desarrollo del predictor es necesario tener un set de datos. Estos datos pasan primeramente por un proceso de curación, como los datos anteriormente presentados. El objetivo de este proceso de curación es eliminar la mayor cantidad posible de datos nulos que tengamos en nuestro set, de esta forma el modelo predictor tendrá mejor calidad.</p>
+<p>La generación del modelo predictor requiere que todas las variables utilizadas para predecir sean de un tipo numérico, por lo tanto, es nesesario convertir las variables a numéricas. Esto se hace dividiendo las variables en más columnas y asigandoles 0 y 1 segun corresponda. Por ejemplo, para la variable “Carrer” (carrera elegida), tenemos los valores posibles de “INF” y “IND”, informatica e industrial respectivamente. Tomamos esta variable y generamos una única columna llamada “CareerINF”, y se les asigna 1 a los que les correspondía el valor “INF”, y 0 a los que les correspondía el valor “IND”.</p>
+<p>Luego de curar los datos y convertir las variables a numéricas, se debe divir el set en dos sub-sets, estos serán uno para entrenar el modelo, que se conoce como set de entrenamiento o “train-set” y la otra parte de los datos restantes, serán para testear el modelo, nombrado “test-set”. La división de estos sub-sets se realiza de una manera aleatoria, dejando al train-set con una porcentaje del 70% del set inicial, y al test-set con el 30% restante de los datos.</p>
+<ul>
+<li>Preview de los sets (train y test son de la misma forma pero con diferentes datos):</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th style="text-align:center;">
+GenderM
+</th>
+<th style="text-align:center;">
+CareerINF
+</th>
+<th style="text-align:center;">
+EntryIngreso.Directo
+</th>
+<th style="text-align:center;">
+EntryIngreso.Febrero
+</th>
+<th style="text-align:center;">
+EntryIngreso.Libre
+</th>
+<th style="text-align:center;">
+EntryIngreso.Octubre
+</th>
+<th style="text-align:center;">
+EntryIngreso.Septiembre
+</th>
+<th style="text-align:center;">
+EntryPase.Universitario
+</th>
+<th style="text-align:center;">
+Math
+</th>
+<th style="text-align:center;">
+Physics
+</th>
+<th style="text-align:center;">
+X.Entry.Average.
+</th>
+<th style="text-align:center;">
+X.Algebra.exam.1.
+</th>
+<th style="text-align:center;">
+X.Algebra.exam.2.
+</th>
+<th style="text-align:center;">
+X.Analisis.exam.1.
+</th>
+<th style="text-align:center;">
+X.IntroProg.exam.1.
+</th>
+<th style="text-align:center;">
+Baja1
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center;">
+1
+</td>
+<td style="text-align:center;">
+0
+</td>
+<td style="text-align:center;">
+1
+</td>
+<td style="text-align:center;">
+0
+</td>
+<td style="text-align:center;">
+0
+</td>
+<td style="text-align:center;">
+0
+</td>
+<td style="text-align:center;">
+0
+</td>
+<td style="text-align:center;">
+0
+</td>
+<td style="text-align:center;">
+6.03
+</td>
+<td style="text-align:center;">
+7.84
+</td>
+<td style="text-align:center;">
+7.06
+</td>
+<td style="text-align:center;">
+6.0
+</td>
+<td style="text-align:center;">
+4
+</td>
+<td style="text-align:center;">
+4.0
+</td>
+<td style="text-align:center;">
+9.0
+</td>
+<td style="text-align:center;">
+0
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+1
+</td>
+<td style="text-align:center;">
+1
+</td>
+<td style="text-align:center;">
+0
+</td>
+<td style="text-align:center;">
+1
+</td>
+<td style="text-align:center;">
+0
+</td>
+<td style="text-align:center;">
+0
+</td>
+<td style="text-align:center;">
+0
+</td>
+<td style="text-align:center;">
+0
+</td>
+<td style="text-align:center;">
+6.00
+</td>
+<td style="text-align:center;">
+7.00
+</td>
+<td style="text-align:center;">
+6.00
+</td>
+<td style="text-align:center;">
+2.0
+</td>
+<td style="text-align:center;">
+4
+</td>
+<td style="text-align:center;">
+2.0
+</td>
+<td style="text-align:center;">
+8.5
+</td>
+<td style="text-align:center;">
+0
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+1
+</td>
+<td style="text-align:center;">
+0
+</td>
+<td style="text-align:center;">
+0
+</td>
+<td style="text-align:center;">
+1
+</td>
+<td style="text-align:center;">
+0
+</td>
+<td style="text-align:center;">
+0
+</td>
+<td style="text-align:center;">
+0
+</td>
+<td style="text-align:center;">
+0
+</td>
+<td style="text-align:center;">
+9.00
+</td>
+<td style="text-align:center;">
+8.00
+</td>
+<td style="text-align:center;">
+8.00
+</td>
+<td style="text-align:center;">
+4.0
+</td>
+<td style="text-align:center;">
+6
+</td>
+<td style="text-align:center;">
+2.0
+</td>
+<td style="text-align:center;">
+8.0
+</td>
+<td style="text-align:center;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+0
+</td>
+<td style="text-align:center;">
+0
+</td>
+<td style="text-align:center;">
+0
+</td>
+<td style="text-align:center;">
+1
+</td>
+<td style="text-align:center;">
+0
+</td>
+<td style="text-align:center;">
+0
+</td>
+<td style="text-align:center;">
+0
+</td>
+<td style="text-align:center;">
+0
+</td>
+<td style="text-align:center;">
+10.00
+</td>
+<td style="text-align:center;">
+9.00
+</td>
+<td style="text-align:center;">
+10.00
+</td>
+<td style="text-align:center;">
+4.0
+</td>
+<td style="text-align:center;">
+7
+</td>
+<td style="text-align:center;">
+4.0
+</td>
+<td style="text-align:center;">
+7.5
+</td>
+<td style="text-align:center;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+1
+</td>
+<td style="text-align:center;">
+0
+</td>
+<td style="text-align:center;">
+0
+</td>
+<td style="text-align:center;">
+1
+</td>
+<td style="text-align:center;">
+0
+</td>
+<td style="text-align:center;">
+0
+</td>
+<td style="text-align:center;">
+0
+</td>
+<td style="text-align:center;">
+0
+</td>
+<td style="text-align:center;">
+10.00
+</td>
+<td style="text-align:center;">
+10.00
+</td>
+<td style="text-align:center;">
+10.00
+</td>
+<td style="text-align:center;">
+8.0
+</td>
+<td style="text-align:center;">
+6
+</td>
+<td style="text-align:center;">
+4.0
+</td>
+<td style="text-align:center;">
+9.0
+</td>
+<td style="text-align:center;">
+0
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+0
+</td>
+<td style="text-align:center;">
+0
+</td>
+<td style="text-align:center;">
+1
+</td>
+<td style="text-align:center;">
+0
+</td>
+<td style="text-align:center;">
+0
+</td>
+<td style="text-align:center;">
+0
+</td>
+<td style="text-align:center;">
+0
+</td>
+<td style="text-align:center;">
+0
+</td>
+<td style="text-align:center;">
+6.03
+</td>
+<td style="text-align:center;">
+7.84
+</td>
+<td style="text-align:center;">
+7.06
+</td>
+<td style="text-align:center;">
+8.0
+</td>
+<td style="text-align:center;">
+9
+</td>
+<td style="text-align:center;">
+9.0
+</td>
+<td style="text-align:center;">
+7.0
+</td>
+<td style="text-align:center;">
+0
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+0
+</td>
+<td style="text-align:center;">
+0
+</td>
+<td style="text-align:center;">
+0
+</td>
+<td style="text-align:center;">
+0
+</td>
+<td style="text-align:center;">
+0
+</td>
+<td style="text-align:center;">
+0
+</td>
+<td style="text-align:center;">
+1
+</td>
+<td style="text-align:center;">
+0
+</td>
+<td style="text-align:center;">
+7.00
+</td>
+<td style="text-align:center;">
+10.00
+</td>
+<td style="text-align:center;">
+8.00
+</td>
+<td style="text-align:center;">
+5.0
+</td>
+<td style="text-align:center;">
+5
+</td>
+<td style="text-align:center;">
+2.0
+</td>
+<td style="text-align:center;">
+7.0
+</td>
+<td style="text-align:center;">
+0
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+1
+</td>
+<td style="text-align:center;">
+1
+</td>
+<td style="text-align:center;">
+0
+</td>
+<td style="text-align:center;">
+1
+</td>
+<td style="text-align:center;">
+0
+</td>
+<td style="text-align:center;">
+0
+</td>
+<td style="text-align:center;">
+0
+</td>
+<td style="text-align:center;">
+0
+</td>
+<td style="text-align:center;">
+2.00
+</td>
+<td style="text-align:center;">
+3.00
+</td>
+<td style="text-align:center;">
+4.00
+</td>
+<td style="text-align:center;">
+1.0
+</td>
+<td style="text-align:center;">
+1
+</td>
+<td style="text-align:center;">
+1.0
+</td>
+<td style="text-align:center;">
+2.0
+</td>
+<td style="text-align:center;">
+0
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+1
+</td>
+<td style="text-align:center;">
+1
+</td>
+<td style="text-align:center;">
+0
+</td>
+<td style="text-align:center;">
+1
+</td>
+<td style="text-align:center;">
+0
+</td>
+<td style="text-align:center;">
+0
+</td>
+<td style="text-align:center;">
+0
+</td>
+<td style="text-align:center;">
+0
+</td>
+<td style="text-align:center;">
+4.00
+</td>
+<td style="text-align:center;">
+7.00
+</td>
+<td style="text-align:center;">
+6.00
+</td>
+<td style="text-align:center;">
+1.0
+</td>
+<td style="text-align:center;">
+1
+</td>
+<td style="text-align:center;">
+1.0
+</td>
+<td style="text-align:center;">
+2.0
+</td>
+<td style="text-align:center;">
+0
+</td>
+</tr>
+<tr>
+<td style="text-align:center;">
+1
+</td>
+<td style="text-align:center;">
+0
+</td>
+<td style="text-align:center;">
+1
+</td>
+<td style="text-align:center;">
+0
+</td>
+<td style="text-align:center;">
+0
+</td>
+<td style="text-align:center;">
+0
+</td>
+<td style="text-align:center;">
+0
+</td>
+<td style="text-align:center;">
+0
+</td>
+<td style="text-align:center;">
+2.00
+</td>
+<td style="text-align:center;">
+9.00
+</td>
+<td style="text-align:center;">
+6.00
+</td>
+<td style="text-align:center;">
+4.5
+</td>
+<td style="text-align:center;">
+4
+</td>
+<td style="text-align:center;">
+4.5
+</td>
+<td style="text-align:center;">
+5.5
+</td>
+<td style="text-align:center;">
+1
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="seleccion-de-variables" class="section level3">
+<h3>Selección de variables</h3>
+<p>La calidad de la predicción a realizar depende mucho de qué variables se utilizan para entrenar el modelo. Obviamente hay variables más importantes que otras, y es por ello que es necesario elegir las adecuadas, esto aumentará la fidelidad de la predicción. Las variables de más “confunden” al modelo y empeoran la fidelidad de la predicción.</p>
+<p>La selección de las variables se hace mediante un método dentro del paquete CARET, este toma el set de datos a utilizar y sugiere un conjunto de variables para realizar el modelo. En esta oportunidad se seleccionaron las siguientes variables: “X.Algebra.exam.2.”, “X.Algebra.exam.1.”, “X.Analisis.exam.1.”, “CareerINF”.</p>
+</div>
+<div id="generacion-de-modelos" class="section level3">
+<h3>Generación de modelos</h3>
+<p>Una vez definidos los sets de datos y seleccionadas las variables, es hora de generar los modelos de predicción. Cada modelo usa diferentes parámetros para entrenarse, y la calidad del modelo depende de estos parametros con los cuales se entrene, no vamos a profundizar más en este tema porque queda fuera del alcance de este este informe. Con los datos se generaron 3 modelos que detallaremos a continuación.</p>
+<p>Para cada modelo se muestra la importancia de las variables, sus predicciones correctas y erroneas, su fidelidad, y su curva AUROC (La curva AUROC, Area Under the Receiver Operating Characteristic curve, se utiliza para medir la eficiencia o la precisión del modelo utilizando la matriz de confusión).</p>
+</div>
+<div id="modelo-1-gbm-gradient-boosting" class="section level3">
+<h3>Modelo 1 (GBM, Gradient Boosting)</h3>
+<p><strong>Importancia de las variables</strong></p>
+<p><img src="GBM/asd3.png" /></p>
+<p>Para este modelo, la variable más importante es el segundo exámen de Álgebra.</p>
+<p><strong>Tabla de confusión</strong></p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left;">
+</th>
+<th style="text-align:right;">
+Valor predicho 0
+</th>
+<th style="text-align:right;">
+Valor predicho 1
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+Valor real 0
+</td>
+<td style="text-align:right;">
+17
+</td>
+<td style="text-align:right;">
+2
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Valor real 1
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+7
+</td>
+</tr>
+</tbody>
+</table>
+<p>Del total de 26 predicciones, 24 fueron correctas y solamente 2 fueron erróneas. Prediciendo bien el 92,3% de los casos.</p>
+<p><strong>Curva AUROC del modelo</strong></p>
+<p><img src="GBM/aucGBM.png" /></p>
+<p>El valor de la curva AUROC para este modelo da de 0.889</p>
+</div>
+<div id="modelo-2-rf-random-forest" class="section level3">
+<h3>Modelo 2 (RF, Random Forest)</h3>
+<p><strong>Importancia de las variables</strong></p>
+<p><img src="GBM/asd4.png" /></p>
+<p>Para este modelo, la variable más importante es el primer exámen de Álgebra.</p>
+<p><strong>Tabla de confusión</strong></p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left;">
+</th>
+<th style="text-align:right;">
+Valor predicho 0
+</th>
+<th style="text-align:right;">
+Valor predicho 1
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+Valor real 0
+</td>
+<td style="text-align:right;">
+17
+</td>
+<td style="text-align:right;">
+5
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Valor real 1
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+4
+</td>
+</tr>
+</tbody>
+</table>
+<p>Del total de 26 predicciones, 21 fueron correctas y solamente 5 fueron erróneas. Prediciendo bien el 80,77% de los casos.</p>
+<p><strong>Curva AUROC del modelo</strong></p>
+<p><img src="GBM/aucRF.png" /></p>
+<p>El valor de la curva AUROC para este modelo da de 0.722</p>
+</div>
+<div id="modelo-3-nnet-neural-net" class="section level3">
+<h3>Modelo 3 (NNET, Neural Net)</h3>
+<p><strong>Importancia de las variables</strong></p>
+<p><img src="GBM/asd5.png" /></p>
+<p>Para este modelo, la variable mas importante es el primer exámen de Álgebra.</p>
+<p><strong>Tabla de confusión</strong></p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left;">
+</th>
+<th style="text-align:right;">
+Valor predicho 0
+</th>
+<th style="text-align:right;">
+Valor predicho 1
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+Valor real 0
+</td>
+<td style="text-align:right;">
+17
+</td>
+<td style="text-align:right;">
+4
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Valor real 1
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+5
+</td>
+</tr>
+</tbody>
+</table>
+<p>Del total de 26 predicciones, 22 fueron correctas y solamente 4 fueron erróneas. Prediciendo bien el 84,6% de los casos.</p>
+<p><strong>Curva AUROC del modelo</strong></p>
+<p><img src="GBM/aucNNET.png" /></p>
+<p>El valor de la curva AUROC para este modelo da de 0.778</p>
+<p>Para concluir, comparando los modelos y sus respectivas curvas, el modelo que daría el mejor desempeño sería el numero 1, con un valor de AUROC de 0.889. Esto quiere decir que hay una chance del 88.9% de que el modelo será capaz de distinguir entre positivos y negativos.</p>
+</div>
+</div>
+</div>
+
+
+</div>
+
+<div id="postamble" data-toggle="wy-nav-shift" class="status">
+<p class="author"><span class="glyphicon glyphicon-user"></span> Facundo Rivas y Braian Biale</p>
+<p class="date"><span class="glyphicon glyphicon-calendar"></span> 28/6/2019</p>
+</div>
+
+
+<script>
+$(document).ready(function () {
+ 	 	$('#content img')
+ 	  .addClass("image-thumb");
+      $('#content img')
+ 	  .addClass("image-lb");
+  $('#content').magnificPopup({
+	      type:'image',
+	      closeOnContentClick: false,
+	      closeBtnInside: false,
+	      delegate: 'img',
+	      gallery: {enabled: false },
+	      image: {
+	        verticalFit: true,
+          titleSrc: 'alt'
+	      }
+ 	    });
+ 	});
+</script>
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,533 @@
+---
+title: Análisis de datos para predictor académico UA
+author: Facundo Rivas y Braian Biale
+date: 28/6/2019
+output: 
+  rmdformats::readthedown:
+    self_contained: true
+    thumbnails: true
+    lightbox: true
+    gallery: false
+    highlight: tango
+---
+
+```{r, echo=FALSE,message=FALSE}
+library(kableExtra)
+library(plotrix)
+library(dplyr)
+library(plyr)
+library(ggplot2)
+library(colortools)
+library(fmsb)
+load("finalData.RData")
+entry2018 <- finalData[-which(finalData$Year == 2019),]
+entry2019 <- finalData[-which(finalData$Year == 2018),]
+```
+
+# Introducción
+
+### Obtención de los datos
+Para la realización de este reporte fueron proporcionados tres archivos *.xlsx*, los cuales contienen ingresantes de los años 2018 y 2019 de la facultad de ingeniería de la Universidad Austral. Estos datos pasaron primeramente por una etapa de *"Data Curation"* o *"Curación de Datos"*, para mejorar su calidad. A continuación se muestra una preview de como quedaron ordenados los datos con sus respectivas variables:
+
+```{r, echo=FALSE}
+kable(finalData[70:80,],align = "c")
+```
+
+# Análisis
+
+### Calidad de los datos
+Como se puede ver hay 13 variables que caracterizan a cada uno de los elementos pertenecientes al conjunto de datos. Luego del proceso de *"Data Curation"*, hay muchas observaciones de las variables que no estan completas. Esto se debe a que, o bien fueron añadidas dichas variables al conjunto original de datos, o bien a que los datos fueron proporcionados ya de esta manera, lo cual afecta a la calidad que tiene la variable. En la siguiente tabla se muestran las variables con sus respectivas calidades (Cantidad de *NA* en cada variable, sobre el total de elementos que conforman el conjunto de datos):
+
+```{r, echo=FALSE}
+aux <- data.frame(Porcentaje = c(round(apply(finalData, 2, function(col)sum(!is.na(col))/length(col)*100))))
+kable(aux)
+```
+
+### Análisis variable a variable
+
+Una vez curados los datos, se hace un análisis "variable a variable" para extraer información de las mismas.
+
+#### Género de los ingresantes {.tabset}
+
+##### **2018**
+
+```{r setGraphPos1, echo=FALSE, include=FALSE}
+womanPercentage <- (sum(entry2018$Gender == "F")/length(entry2018$Gender))*100
+menPercentage <- (sum(entry2018$Gender == "M")/length(entry2018$Gender))*100
+slices <- c(menPercentage,womanPercentage) 
+lbls <- c(paste("Varones \n",round(menPercentage),"%"),paste("Mujeres \n",round(womanPercentage),"%"))
+posPie <- pie3D(slices,labels=lbls,labelcex = 1.5,explode = 0.05, radius = 1,col = c("#FF2C2C","#FF6262"),shade = 0.3,theta = 1,
+      main="Porcentaje de ingresantes \n 2018 por género")
+posPie[1] <- 4
+posPie[2] <- 5.37
+
+woman <- sum(entry2018$Gender == "F")
+man <- sum(entry2018$Gender == "M")
+```
+
+```{r graficoDeTorta1,echo=FALSE}
+pie3D(slices,labels=lbls,labelcex = 1.5,explode = 0.05, radius = 1,col = c("#FF2C2C","#FF6262"),shade = 0.3,theta = 1,
+      main="Porcentaje de ingresantes \n 2018 por género", labelpos = posPie)
+```
+
+En 2018, ingresaron `r man` varones y `r woman` mujeres. 
+
+##### **2019**
+
+```{r setGraphPos2, echo=FALSE, include=FALSE}
+womanPercentage <- (sum(entry2019$Gender == "F")/length(entry2019$Gender))*100
+menPercentage <- (sum(entry2019$Gender == "M")/length(entry2019$Gender))*100
+slices <- c(menPercentage,womanPercentage) 
+lbls <- c(paste("Varones \n",round(menPercentage),"%"),paste("Mujeres \n",round(womanPercentage),"%"))
+posPie <- pie3D(slices,labels=lbls,labelcex = 1.5,explode = 0.05, radius = 1,col = c("#FF2C2C","#FF6262"),shade = 0.3,theta = 1,
+      main="Porcentaje de ingresantes \n 2019 por género")
+posPie[1] <- 4
+posPie[2] <- 5
+
+woman <- sum(entry2019$Gender == "F")
+man <- sum(entry2019$Gender == "M")
+```
+
+```{r graficoDeTorta2,echo=FALSE}
+pie3D(slices,labels=lbls,labelcex = 1.5,explode = 0.05, radius = 1,col = c("#FF2C2C","#FF6262"),shade = 0.3,theta = 1,
+     main="Porcentaje de ingresantes \n 2019 por género",labelpos = posPie)
+```
+
+En 2019, ingresaron `r man` varones y `r woman` mujeres.
+
+#### {.unnumbered}
+
+Como puede notarse en los gráficos que el porcentaje de mujeres con respecto al de varones es mayor en el año 2019 que en el 2018, debido a que incrementó la cantidad de mujeres que ingresaron a casi el doble, y el incremento de los varones no es significativo con respecto al de las mujeres.
+
+#### Tipos de ingreso 
+
+```{r graficoBarra1,echo=FALSE}
+par(las=2)
+par(mar=c(5,12,4,2))
+entrys <- table(finalData$Entry)
+barplot(entrys, main="Tipo de ingreso elegido", horiz=TRUE,col = c("#78281F","#7B241C","#922B21","#A93226","#C0392B","#CD6155","#D98880","#E6B0AA","#F2D7D5"))
+```
+
+El eje horizontal del gráfico representa la cantidad de ingresantes y el eje vertical contiene los distintos tipos de ingresos. Se puede ver que una gran mayoría de las personas eligen el curso de ingreso de febrero para entrar a la universidad.
+
+#### Colegios de procedencia
+
+```{r graficoDeBarra2,echo=FALSE}
+sorted <- sort(table(finalData$School),decreasing = TRUE)
+barplot(sorted[1:3],main = "Top 3 colegios que aportaron mas ingresantes entre 2018 y 2019",col = c("#21618C","#2E86C1","#5DADE2"))
+```
+
+El eje vertical del gráfico representa la cantidad de ingresantes que proporciona cada colegio y el eje horizontal contiene los nombres de los colegios. "Los Molinos", el colegio que más aportó ingresantes es de la misma zona que la Universidad Austral.
+
+#### Notas del examen de Matemática {.tabset}
+
+Se analizan el promedio de todas las notas y el porcentaje de ingresantes que aprobaron el examen en primer instancia, en los años 2018 y 2019.
+
+##### **2018**
+
+```{r , echo=FALSE}
+hasMathValue <- finalData[which(!is.na(finalData$Math)&finalData$Year==2018),]
+mathAverage <- sum(hasMathValue$Math)/length(hasMathValue$Math)
+mathApprovedpercentage <- (sum(hasMathValue$Math>4)/length(hasMathValue$Math))*100
+aux <- data.frame(Promedio = round(mathAverage), Aprobados = paste(round(mathApprovedpercentage),"%"))
+kable(aux,align = "c")
+```
+
+##### **2019**
+
+```{r, echo=FALSE}
+hasMathValue <- finalData[which(!is.na(finalData$Math)&finalData$Year==2019),]
+mathAverage <- sum(hasMathValue$Math)/length(hasMathValue$Math)
+mathApprovedpercentage <- (sum(hasMathValue$Math>4)/length(hasMathValue$Math))*100
+aux <- data.frame(Promedio = round(mathAverage), Aprobados = paste(round(mathApprovedpercentage),"%"))
+kable(aux,align = "c")
+```
+
+#### {.unnumbered}
+
+El promedio de nota de los exámenes se mantuvo igual y el porcentaje de aprobados en primer instancia tuvo una varianza despreciable. Esto puede darnos lugar a hacer una supocisión diciendo que mientras que la nota promedio de matemática sea 6, el porcentaje de aprobados rondará en un 60%. 
+
+#### Notas del examen de Física {.tabset}
+
+Se analizan el promedio de todas las notas y el porcentaje de ingresantes que aprobaron el examen en primer instancia, en los años 2018 y 2019.
+
+##### **2018:**
+
+```{r, echo=FALSE}
+hasPhysicsValue <- finalData[which(!is.na(finalData$Physics)&finalData$Year==2018),]
+physicsAverage <- sum(hasPhysicsValue$Physics)/length(hasPhysicsValue$Physics)
+physicsApprovedpercentage <- (sum(hasPhysicsValue$Physics>4)/length(hasPhysicsValue$Physics))*100
+aux <- data.frame(Promedio = round(physicsAverage), Aprobados = paste(round(physicsApprovedpercentage),"%"))
+kable(aux,align = "c")
+```
+
+##### **2019:**
+
+```{r, echo=FALSE}
+hasPhysicsValue <- finalData[which(!is.na(finalData$Physics)&finalData$Year==2019),]
+physicsAverage <- sum(hasPhysicsValue$Physics)/length(hasPhysicsValue$Physics)
+physicsApprovedpercentage <- (sum(hasPhysicsValue$Physics>4)/length(hasPhysicsValue$Physics))*100
+aux <- data.frame(Promedio = round(physicsAverage), Aprobados = paste(round(physicsApprovedpercentage),"%"))
+kable(aux,align = "c")
+```
+
+#### {.unnumbered}
+
+El promedio de nota de los exámenes bajó y al igual que el porcentaje de aprobados pudiendo suponer que el examen de física de 2019 tuvo una dificultad mayor, o bien, los alumnos se prepararon menos.
+
+**Se puede notar que en ambas materias el porcentaje de aprobados del año 2019 es menor que el de 2018**
+
+#### Promedio de ingreso
+
+Se analizan los datos de promedio de ingreso observando el porcentaje de ingresantes que obtuvo una puntuación mayor a 7.
+
+```{r graficoDensidad,echo=FALSE,message=FALSE,warning=FALSE}
+mu <- ddply(finalData, "Year", summarise, grp.mean=mean("Entry Average"))
+
+colors<-c("lightgreen", "lightblue")
+
+ggplot(finalData, aes(x=`Entry Average`, fill=Year)) + geom_density(alpha = 0.6) + geom_vline(data=mu, aes(xintercept=mean("Entry Average"), color= Year),linetype="dashed") + scale_fill_manual(values=colors) + scale_color_manual(values=colors)
+
+```
+
+* Ingresantes 2018: `r sum(finalData$Year=="2018")`
+
+* Ingresantes 2019: `r sum(finalData$Year=="2019")`
+
+**Observese que la densidad de ingresantes que obtuvieron un promedio mayor a 7 en 2019 es mayor que en 2018.**
+
+#### Promedio de secundaria
+
+Análisis de los datos de promedio de secundaria y obtención un top 5.
+
+```{r, echo=FALSE,message=FALSE}
+hsAverages <- finalData[,c(1,12,11)]
+hsAverages <- hsAverages[-which(is.na(hsAverages$`HS Average`)),]
+top5 <- order(hsAverages$`HS Average`,decreasing = TRUE)
+kable(hsAverages[top5[1:5],],align = "c")
+```
+
+#### Recuperatorios {.tabset}
+
+Teniendo los conjuntos de los ingresantes totales de 2018 y 2019, se observa el comportamiento del porcentaje de alumnos que tuvieron que rendir algún tipo de recuperatorio.
+
+##### **2018**
+
+```{r,echo=FALSE}
+noExamsNeeded <- finalData[finalData$Entry!="Pase Universitario", ]
+noExamsNeeded <- finalData[finalData$Entry!="Ingreso Directo", ]
+percentageR2018 <- (sum((!is.na(noExamsNeeded$R.Math) | !is.na(noExamsNeeded$R.Physics) & noExamsNeeded$Year==2018))/length(noExamsNeeded$Year==2018))*100
+
+slices <- c(percentageR2018,100-percentageR2018) 
+lbls <- c(paste(round(percentageR2018),"% rindió"),paste(100-round(percentageR2018),"% no rindió"))
+pie3D(slices,labels=lbls,labelcex = 1.2,explode = 0.05, radius = 0.8,col = c("#5B2C6F","#8E44AD"),shade = 0.3,theta = 1,
+      main="Porcentaje de ingresantes que rindieron recuperatorio 2018")
+```
+
+##### **2019**
+
+```{r,echo=FALSE}
+noExamsNeeded <- finalData[finalData$Entry!="Pase Universitario", ]
+noExamsNeeded <- finalData[finalData$Entry!="Ingreso Directo", ]
+percentageR2019 <- (sum((!is.na(noExamsNeeded$R.Math) | !is.na(noExamsNeeded$R.Physics) & noExamsNeeded$Year==2019))/length(noExamsNeeded$Year==2019))*100
+
+slices <- c(percentageR2019,100-percentageR2019) 
+lbls <- c(paste(round(percentageR2019),"% rindió"),paste(100-round(percentageR2019),"% no rindió"))
+pie3D(slices,labels=lbls,labelcex = 1.2,explode = 0.05, radius = 0.8,col = c("#5B2C6F","#8E44AD"),shade = 0.3,theta = 1,
+      main="Porcentaje de ingresantes que rindieron recuperatorio 2019")
+```
+
+#### {.unnumbered}
+
+**Los porcentajes para ambos años son muy similares.**
+
+# Interpretación
+
+Luego de analizar los datos variable a variable, se hace una interpretación de dichos análisis cruzando datos con el fin de obtener más información de las conclusiones a las que se llega.
+
+#### Media de los promedios de ingreso segun género
+
+**2018:**
+
+```{r,echo=FALSE}
+hasEntryAverageMan <- finalData[which(!is.na(finalData$`Entry Average`)&finalData$Gender=="M"&finalData$Year==2018),]
+hasEntryAverageWoman <- finalData[which(!is.na(finalData$`Entry Average`)&finalData$Gender=="F"&finalData$Year==2018),]
+manEntryAverage <- sum(hasEntryAverageMan$`Entry Average`)/length(hasEntryAverageMan$Year==2018)
+womanEntryAverage <- sum(hasEntryAverageWoman$`Entry Average`)/length(hasEntryAverageWoman$Year==2018)
+aux <- data.frame(Gender = c("Varones","Mujeres"), Mean = c(round(manEntryAverage,2),round(womanEntryAverage,2)))
+kable(aux)
+```
+
+Las mujeres obtuvieron un promedio de ingreso 0.40 puntos mayor al de los varones.
+
+**2019:**
+
+```{r,echo=FALSE}
+hasEntryAverageMan <- finalData[which(!is.na(finalData$`Entry Average`)&finalData$Gender=="M"&finalData$Year==2019),]
+hasEntryAverageWoman <- finalData[which(!is.na(finalData$`Entry Average`)&finalData$Gender=="F"&finalData$Year==2019),]
+manEntryAverage <- sum(hasEntryAverageMan$`Entry Average`)/length(hasEntryAverageMan$Year==2019)
+womanEntryAverage <- sum(hasEntryAverageWoman$`Entry Average`)/length(hasEntryAverageWoman$Year==2019)
+aux <- data.frame(Gender = c("Varones","Mujeres"), Mean = c(round(manEntryAverage,2),round(womanEntryAverage,2)))
+kable(aux)
+```
+
+Las mujeres obtuvieron un promedio de ingreso 0.09 puntos mayor al de los varones. La diferencia de promedios de ingreso entre varones y mujeres fue mas baja en el último año.
+
+#### Comportamiento en las materias según género
+
+##### Notas de matemática {.tabset}
+ 
+###### **2018**
+
+```{r,echo=FALSE,message=FALSE,warning=FALSE}
+mu <- ddply(entry2018, "Gender", summarise, grp.mean=mean("Math"))
+
+colors <- c("pink", "lightblue")
+
+ggplot(entry2018, aes(x=`Math`, fill=Gender)) + geom_density(alpha = 0.6) + geom_vline(data=mu, aes(xintercept=mean("Math"), color= Gender),linetype="dashed") + scale_fill_manual(values=colors) + scale_color_manual(values=colors)
+```
+
+###### **2019**
+
+```{r,echo=FALSE,message=FALSE,warning=FALSE}
+mu1 <- ddply(entry2019, "Gender", summarise, grp.mean=mean("Math"))
+
+colors1 <- c("pink", "lightblue")
+
+ggplot(entry2019, aes(x=`Math`, fill=Gender)) + geom_density(alpha = 0.6) + geom_vline(data=mu1, aes(xintercept=mean("Math"), color= Gender),linetype="dashed") + scale_fill_manual(values=colors1) + scale_color_manual(values=colors1)
+```
+
+##### {.unnumbered}
+
+Las mujeres tuvieron un desempeño muy similar para ambos años, en cambio, se puede notar que los hombres tuvieron una mejora en su desempeño en el año 2019 (los picos de densidad se dan en notas un poco más altas).
+
+##### Notas física {.tabset}
+
+###### **2018**
+
+```{r,echo=FALSE,message=FALSE,warning=FALSE}
+mu2 <- ddply(entry2018, "Gender", summarise, grp.mean=mean("Physics"))
+
+colors2 <- c("pink", "lightblue")
+
+ggplot(entry2018, aes(x=`Physics`, fill=Gender)) + geom_density(alpha = 0.6) + geom_vline(data=mu2, aes(xintercept=mean("Physics"), color= Gender),linetype="dashed") + scale_fill_manual(values=colors2) + scale_color_manual(values=colors2)
+```
+
+###### **2019**
+
+```{r,echo=FALSE,message=FALSE,warning=FALSE}
+mu3 <- ddply(entry2019, "Gender", summarise, grp.mean=mean("Physics"))
+
+colors3 <- c("pink", "lightblue")
+
+ggplot(entry2019, aes(x=`Physics`, fill=Gender)) + geom_density(alpha = 0.6) + geom_vline(data=mu3, aes(xintercept=mean("Physics"), color= Gender),linetype="dashed") + scale_fill_manual(values=colors3) + scale_color_manual(values=colors3)
+```
+
+##### {.unnumbered}
+
+En 2019 el desempeño general fue mas bajo, pero es notable que en ambos años las mujeres tuvieron un mejor desempeño que los varones.
+
+De estos 4 gráficos anteriores se puede notar claramente que el desempeño en física para ambos años y sexos es considerablemente mejor que el de matemática.
+
+#### Carrera elegida según género {.tabset}
+
+##### **Varones**
+
+```{r,echo=FALSE,message=FALSE,warning=FALSE}
+par(mfrow=c(1,2))
+man1 <- entry2018[which(entry2018$Gender=="M"),]
+g1 <- barplot(table(man1$Career),main = "Carrera elegida en 2018",col = c("#EBDEF0","#C39BD3","#9B59B6"))
+man2 <- entry2019[which(entry2019$Gender=="M"),]
+g2 <- barplot(table(man2$Career),main = "Carrera elegida en 2019",col = c("#EBDEF0","#C39BD3","#9B59B6"))
+```
+
+##### **Mujeres**
+
+```{r,echo=FALSE,message=FALSE,warning=FALSE}
+par(mfrow=c(1,2))
+woman1 <- entry2018[which(entry2018$Gender=="F"),]
+g1 <- barplot(table(woman1$Career),main = "Carrera elegida en 2018",col = c("#C39BD3","#9B59B6"))
+woman2 <- entry2019[which(entry2019$Gender=="F"),]
+g2 <- barplot(table(woman2$Career),main = "Carrera elegida en 2019",col = c("#EBDEF0","#C39BD3","#9B59B6"))
+```
+
+#### Comportamiento en las materias según carrera elegida
+
+##### Notas matemática {.tabset}
+
+###### **2018**
+
+```{r,echo=FALSE,message=FALSE,warning=FALSE}
+mu <- ddply(entry2018, "Career", summarise, grp.mean=mean("Math"))
+
+colors <- c("#0D56A6", "#FFC600")
+
+ggplot(entry2018, aes(x=`Math`, fill= Career)) + geom_density(alpha = 0.6) + geom_vline(data=mu, aes(xintercept=mean("Math"), color= Career),linetype="dashed") + scale_fill_manual(values=colors) + scale_color_manual(values=colors)
+```
+
+###### **2019**
+
+```{r,echo=FALSE,message=FALSE,warning=FALSE}
+mu1 <- ddply(entry2019, "Career", summarise, grp.mean=mean("Math"))
+
+colors1 <- c("#FF5900","#0D56A6", "#FFC600")
+
+ggplot(entry2019, aes(x=`Math`, fill=Career)) + geom_density(alpha = 0.6) + geom_vline(data=mu1, aes(xintercept=mean("Math"), color= Career),linetype="dashed") + scale_fill_manual(values=colors1) + scale_color_manual(values=colors1)
+```
+
+##### {.unnumbered}
+
+* **2018:** Ingresantes de ingeniería industrial tienen mejor desempeño que lo ingresantes de ingeniería informática.
+
+* **2019:** Ingresantes de ingeniería industrial e informática tienen un desempeño similar, mientras que los de ingeniería biomédica, tienen un desempeño mas bajo (mayor densidad en notas bajas).
+
+##### Notas física {.tabset}
+
+###### **2018**
+
+```{r,echo=FALSE,message=FALSE,warning=FALSE}
+mu2 <- ddply(entry2018, "Career", summarise, grp.mean=mean("Physics"))
+
+colors2 <- c("#0D56A6", "#FFC600")
+
+ggplot(entry2018, aes(x=`Physics`, fill=Career)) + geom_density(alpha = 0.6) + geom_vline(data=mu2, aes(xintercept=mean("Physics"), color= Career),linetype="dashed") + scale_fill_manual(values=colors2) + scale_color_manual(values=colors2)
+```
+
+###### **2019**
+
+```{r,echo=FALSE,message=FALSE,warning=FALSE}
+mu3 <- ddply(entry2019, "Career", summarise, grp.mean=mean("Physics"))
+
+colors3 <- c("#FF5900","#0D56A6", "#FFC600")
+
+ggplot(entry2019, aes(x=`Physics`, fill=Career)) + geom_density(alpha = 0.6) + geom_vline(data=mu3, aes(xintercept=mean("Physics"), color= Career),linetype="dashed") + scale_fill_manual(values=colors3) + scale_color_manual(values=colors3)
+```
+
+##### {.unnumbered}
+
+* **2018:** Ingresantes de ingeniería industrial tienen mejor desempeño que lo ingresantes de ingeniería informática.
+
+* **2019:** Ingresantes de ingeniería biomédica e informática tienen un desempeño similar, mientras que los de ingeniería industrial, tienen un desempeño mas alto (mayor densidad en notas altas).
+
+# Predictor
+
+En este informe se explica el desarrollo de la generación de modelos de predicción para predecir si un alumno desertará de la carrera con datos de fin del primer cuatrimestre de cursada.
+
+### Set de datos
+
+  Para el desarrollo del predictor es necesario tener un set de datos. Estos datos pasan primeramente por un proceso de curación, como los datos anteriormente presentados. El objetivo de este proceso de curación es eliminar la mayor cantidad posible de datos nulos que tengamos en nuestro set, de esta forma el modelo predictor tendrá mejor calidad. 
+  
+  La generación del modelo predictor requiere que todas las variables utilizadas para predecir sean de un tipo numérico, por lo tanto, es nesesario convertir las variables a numéricas. Esto se hace dividiendo las variables en más columnas y asigandoles 0 y 1 segun corresponda. Por ejemplo, para la variable "Carrer" (carrera elegida), tenemos los valores posibles de "INF" y "IND", informatica e industrial respectivamente. Tomamos esta variable y generamos una única columna llamada "CareerINF", y se les asigna 1 a los que les correspondía el valor "INF", y 0 a los que les correspondía el valor "IND".
+  
+  Luego de curar los datos y convertir las variables a numéricas, se debe divir el set en dos sub-sets, estos serán uno para entrenar el modelo, que se conoce como set de entrenamiento o "train-set" y la otra parte de los datos restantes, serán para testear el modelo, nombrado "test-set". La división de estos sub-sets se realiza de una manera aleatoria, dejando al train-set con una porcentaje del 70% del set inicial, y al test-set con el 30% restante de los datos.
+
+* Preview de los sets (train y test son de la misma forma pero con diferentes datos):
+
+```{r, echo=FALSE}
+load("C:/Users/facun/OneDrive/Desktop/R/dataSetf.RData")
+kable(dataSetf[1:10,],align = "c")
+```
+
+### Selección de variables
+
+La calidad de la predicción a realizar depende mucho de qué variables se utilizan  para entrenar el modelo. Obviamente hay variables más importantes que otras, y es por ello que es necesario elegir las  adecuadas, esto aumentará la fidelidad de la predicción. Las variables de más "confunden" al modelo y empeoran la fidelidad de la predicción.
+
+La selección de las variables se hace mediante un método dentro del paquete CARET, este toma el set de datos a utilizar y sugiere un conjunto de variables para realizar el modelo. En esta oportunidad se seleccionaron las siguientes variables: "X.Algebra.exam.2.", "X.Algebra.exam.1.", "X.Analisis.exam.1.", "CareerINF".
+
+### Generación de modelos
+
+Una vez definidos los sets de datos y seleccionadas las variables, es hora de generar los modelos de predicción. Cada modelo usa diferentes parámetros para entrenarse, y la calidad del modelo depende de estos parametros con los cuales se entrene, no vamos a profundizar más en este tema porque queda fuera del alcance de este este informe. Con los datos se generaron 3 modelos que detallaremos a continuación.
+
+Para cada modelo se muestra la importancia de las variables, sus predicciones correctas y erroneas, su fidelidad, y su curva AUROC (La curva AUROC, Area Under the Receiver Operating Characteristic curve, se utiliza para medir la eficiencia o la precisión del modelo utilizando la matriz de confusión).
+
+### Modelo 1 (GBM, Gradient Boosting)
+
+**Importancia de las variables**
+
+![ ](C:/Users/facun/OneDrive/Desktop/R/GBM/asd3.png)
+
+Para este modelo, la variable más importante es el segundo exámen de Álgebra.
+
+**Tabla de confusión**
+
+```{r, echo=FALSE}
+confusion <- matrix(c(17,2,0,7),ncol=2,byrow=TRUE)
+colnames(confusion) <- c("Valor predicho 0","Valor predicho 1")
+rownames(confusion) <- c("Valor real 0","Valor real 1")
+kable(confusion)
+```
+
+Del total de 26 predicciones, 24 fueron correctas y solamente 2 fueron erróneas. Prediciendo bien el  92,3% de los casos.
+
+**Curva AUROC del modelo**
+
+![ ](C:/Users/facun/OneDrive/Desktop/R/GBM/aucGBM.png)
+
+El valor de la curva AUROC para este modelo da de 0.889
+
+### Modelo 2 (RF, Random Forest)
+
+**Importancia de las variables**
+
+![ ](C:/Users/facun/OneDrive/Desktop/R/GBM/asd4.png)
+
+Para este modelo, la variable más importante es el primer exámen de Álgebra.
+
+**Tabla de confusión**
+
+```{r, echo=FALSE}
+confusion <- matrix(c(17,5,0,4),ncol=2,byrow=TRUE)
+colnames(confusion) <- c("Valor predicho 0","Valor predicho 1")
+rownames(confusion) <- c("Valor real 0","Valor real 1")
+kable(confusion)
+```
+
+Del total de 26 predicciones, 21 fueron correctas y solamente 5 fueron erróneas. Prediciendo bien el 80,77% de los casos.
+
+**Curva AUROC del modelo**
+
+![ ](C:/Users/facun/OneDrive/Desktop/R/GBM/aucRF.png)
+
+El valor de la curva AUROC para este modelo da de 0.722
+
+### Modelo 3 (NNET, Neural Net)
+
+**Importancia de las variables**
+
+![ ](C:/Users/facun/OneDrive/Desktop/R/GBM/asd5.png)
+
+Para este modelo, la variable mas importante es el primer exámen de Álgebra.
+
+**Tabla de confusión**
+
+```{r, echo=FALSE}
+confusion <- matrix(c(17,4,0,5),ncol=2,byrow=TRUE)
+colnames(confusion) <- c("Valor predicho 0","Valor predicho 1")
+rownames(confusion) <- c("Valor real 0","Valor real 1")
+kable(confusion)
+```
+
+Del total de 26 predicciones, 22 fueron correctas y solamente 4 fueron erróneas. Prediciendo bien el 84,6% de los casos.
+
+**Curva AUROC del modelo**
+
+![ ](C:/Users/facun/OneDrive/Desktop/R/GBM/aucNNET.png)
+
+El valor de la curva AUROC para este modelo da de 0.778
+
+Para concluir, comparando los modelos y sus respectivas curvas, el modelo que daría el mejor desempeño sería el numero 1, con un valor de AUROC de 0.889. Esto quiere decir que hay una chance del 88.9% de que el modelo será capaz de distinguir entre positivos y negativos. 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
